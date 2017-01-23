@@ -57,4 +57,6 @@ def BruteForce(PointArray):
     for i in minPoints:
         writeTie.write(str(i))
         writeTie.write('\n')
+
+
 main()
