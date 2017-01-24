@@ -11,29 +11,28 @@ def main():
 
 
 def getSmallestDistance(PointPairs, nElements):
+
     if (nElements <= 3):
-        print("Inside Base case", PointPairs)
+        #print("Inside Base case", PointPairs)
         return BruteForce(PointPairs)
 
     midPoint = int(nElements / 2)
     middleValue = PointPairs[midPoint]
 
-    print("I'M THE MIDDLE VALUE with Parent: ")
+    """print("I'M THE MIDDLE VALUE with Parent: ")
     print(middleValue, PointPairs)
+"""
 
     LeftSmallestDist = getSmallestDistance(
         PointPairs[:midPoint], midPoint)  # Break into left half
     RightSmalestDist = getSmallestDistance(
         PointPairs[midPoint:], nElements - midPoint)  # Break into right half
 
-    """print("Trying to print min distances for each half: ")
+    print("Trying to print min distances for each half: ")
     print(LeftSmallestDist)
-    print(RightSmalestDist)"""
-    if (LeftSmallestDist != None):
-        shortest_Dist_In_Half = min(LeftSmallestDist, RightSmalestDist)
-        print(shortest_Dist_In_Half)
+    print(RightSmalestDist)
+    shortest_Dist_In_Half = min(LeftSmallestDist, RightSmalestDist)
 
-    i = 0
     Points_Inside_Strip = []
     print(PointPairs, middleValue[0])
     for i in PointPairs:
@@ -41,9 +40,20 @@ def getSmallestDistance(PointPairs, nElements):
             Points_Inside_Strip.append(i)
         print(Points_Inside_Strip)
 
+    return (pruneWithMiddle(Points_Inside_Strip, shortest_Dist_In_Half))
+
 
 def getDistance(Point_x1, Point_y1, Point_x2, Point_y2):
     return sqrt(((Point_x2 - Point_x1) ** 2) + ((Point_y2 - Point_y1) ** 2))
+
+
+def pruneWithMiddle(ShortPoints, minimum):
+    smallest = BruteForce(ShortPoints)
+    if smallest < minimum:
+        return smallest
+
+    print("I'm the smallest value", smallest, minimum)
+    return minimum
 
 
 def buildArray(PointArray, PointPairs):
@@ -99,7 +109,7 @@ def BruteForce(PointArray):
             j += 1
         i += 1
 
-        return minimum
+    return minimum
 
 
 main()
