@@ -1,4 +1,7 @@
 from math import sqrt
+import sys
+import time
+start_Time = time.time()
 
 
 def main():
@@ -9,8 +12,8 @@ def main():
 
 
 def buildArray(PointArray):
-    openFile = open("example.input", "r+")
-    value = openFile.read()
+    openFile = open(sys.argv[1], "r+")
+    value = openFile.read().split()
     for i in value:
         if i != ' ' and i != '\n':  # only accept things that are not a space or new line
             PointArray.append(int(i))
@@ -53,6 +56,13 @@ def BruteForce(PointArray):
 
             j += 2
         i += 2
+
+    timelog = open("timelog_bruteforce.txt", "a")
+    current_Time = start_Time - time.time()
+    timelog.write(str(current_Time))
+    timelog.write("\n")
+    timelog.close()
+
     writeTie = open("output_bruteforce.txt", "a")
     for i in minPoints:
         writeTie.write(str(i))

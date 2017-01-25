@@ -1,27 +1,19 @@
 import matplotlib.pyplot as plt
-
+import sys
 plt.figure()
 
 PointArray = []
-openFile = open("10^1.txt", "r+")
+openFile = open(sys.argv[1], "r+")
 value = openFile.read()
-test = value.split()
-
-j = 0
-print(test)
-while (j + 1 <= len(test)):
-    PointArray.append([int(test[j]), int(test[j + 1])])
-    j = j + 2
-print(PointArray)
-
-
+time_Values = value.split()
+i = 0
+for i in range(len(time_Values)):
+    time_Values[i] = float(time_Values[i])
 # create some data
-x_series = PointArray
-y_series_1 = [x**2 for x in x_series]
-y_series_2 = [x**3 for x in x_series]
-
+inputSize = [10, 100, 1000, 10000, 100000]
 # plot the two lines
-plt.plot(x_series, y_series_1)
-plt.plot(x_series, y_series_2)
+#plt.axis([10, 100000, 0, 200])
+plt.xticks([10, 100, 1000, 10000, 100000])
+plt.plot(inputSize, time_Values, 'ro-')
 
 plt.savefig("Test.pdf")
