@@ -13,7 +13,6 @@ for i in range(len(time_Values)):
 inputSize = [10, 100, 1000, 10000, 100000]
 # plot the two lines
 #plt.axis([10, 100000, 0, 200])
-plt.xticks([10, 100, 1000, 10000, 100000])
 plt.plot(inputSize, time_Values, 'ro-')
 
 plt.savefig("Test.pdf")
