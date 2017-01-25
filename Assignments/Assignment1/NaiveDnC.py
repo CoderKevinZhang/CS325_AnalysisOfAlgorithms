@@ -13,7 +13,7 @@ def main():
 def getSmallestDistance(PointPairs, nElements):
 
     if (nElements <= 3):
-        #print("Inside Base case", PointPairs)
+        # print("Inside Base case", PointPairs)
         return BruteForce(PointPairs)
 
     midPoint = int(nElements / 2)
@@ -41,12 +41,22 @@ def getDistance(Point_x1, Point_y1, Point_x2, Point_y2):
 
 
 def pruneWithMiddle(ShortPoints, minimum):
-    print("I am the points inside the strip", ShortPoints)
-    smallest = BruteForce(ShortPoints)
-    if smallest < minimum:
-        return smallest
+    print("I am the points inside the strip", ShortPoints, len(ShortPoints))
+    ShortPoints.sort(key=lambda x: x[1])  # Sort by the y Coordinate
+    for i in range(len(ShortPoints) - 1):
+        j = i + 1
+        first_Test = ShortPoints[j][1]
+        Second_Test = ShortPoints[i][1]
+        Some_Number = first_Test - Second_Test
+        while((Some_Number) <= minimum and (j <= len(ShortPoints) - 1)):
+            dist_From_Midpoint = getDistance(ShortPoints[j][0], ShortPoints[j][
+                1], ShortPoints[i][0], ShortPoints[i][1])
+            Test_Min = min(dist_From_Midpoint, minimum)
+            if (Test_Min < minimum):
+                minimum = Test_Min
+            j += 1
 
-    print("I'm the smallest value", smallest, minimum)
+    print("I'm the smallest value", minimum)
     return minimum
 
 
@@ -85,7 +95,7 @@ def BruteForce(PointArray):
 
 main()
 
-    """
+"""
     xCoordinates = []
     for i in PointPairs:
         xCoordinates.append(i[0])  # Goes through each pair and grabs x value
