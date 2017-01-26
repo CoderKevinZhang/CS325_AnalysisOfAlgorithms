@@ -4,7 +4,7 @@ import sys
 
 output_Holder = []
 for i in range(int(sys.argv[1])):  # run until CLI arg
-    x_Value = random.randrange(0, 1000)
+    x_Value = random.randrange(0, 1000)  # Generate 0-1000
     y_Value = random.randrange(0, 1000)
     output_Holder.append([x_Value, y_Value])
 
@@ -14,7 +14,7 @@ for i in output_Holder:
     j = x + 1
     while (j + 1 <= len(output_Holder)):
         nextVal = output_Holder[j]
-        if (nextVal == i):
+        if (nextVal == i):  # If the next value is the same as current
             del [output_Holder[j]]  # delete any double that might appear
         j += 1
     x += 1

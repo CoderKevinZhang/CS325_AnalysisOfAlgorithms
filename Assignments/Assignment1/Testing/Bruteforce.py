@@ -7,7 +7,6 @@ start_Time = time.time()
 def main():
     PointArray = []
     buildArray(PointArray)
-    # print(PointArray)
     BruteForce(PointArray)
 
 
@@ -17,8 +16,6 @@ def buildArray(PointArray):
     for i in value:
         if i != ' ' and i != '\n':  # only accept things that are not a space or new line
             PointArray.append(int(i))
-
-    # print(PointArray)
 
 
 def getDistance(Point_x1, Point_y1, Point_x2, Point_y2):

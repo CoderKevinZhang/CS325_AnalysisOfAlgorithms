@@ -23,7 +23,6 @@ def main():
 def getSmallestDistance(PointPairs, nElements):
 
     if (nElements <= 3):
-        # print("Inside Base case", PointPairs)
         return BruteForce(PointPairs)
 
     midPoint = int(nElements / 2)
@@ -33,17 +32,17 @@ def getSmallestDistance(PointPairs, nElements):
         PointPairs[:midPoint], midPoint)  # Break into left half
     RightSmalestDist = getSmallestDistance(
         PointPairs[midPoint:], nElements - midPoint)  # Break into right half
-    if (RightSmalestDist == 0.0):
-        print("fuck by L/R")
+
     shortest_Dist_In_Half = min(LeftSmallestDist, RightSmalestDist)
 
     Points_Inside_Strip = []
 
     for i in PointPairs:
         if (int(i[0] - middleValue[0]) < shortest_Dist_In_Half):
+            # if the x values are smaller than shortest distances in each
+            # respective half
             Points_Inside_Strip.append(i)
-    if (shortest_Dist_In_Half == 0.0):
-        print("fuck")
+
     return (pruneWithMiddle(Points_Inside_Strip, shortest_Dist_In_Half))
 
 
@@ -57,13 +56,11 @@ def pruneWithMiddle(ShortPoints, minimum):
         j = i + 1
         first_Test = ShortPoints[j][1]
         Second_Test = ShortPoints[i][1]
-        Some_Number = first_Test - Second_Test
-        while((Some_Number) <= minimum and (j <= len(ShortPoints) - 1)):
+        Y_Value_Dist = first_Test - Second_Test
+        while((Y_Value_Dist) <= minimum and (j <= len(ShortPoints) - 1)):
             dist_From_Midpoint = getDistance(ShortPoints[j][0], ShortPoints[j][
                 1], ShortPoints[i][0], ShortPoints[i][1])
             Test_Min = min(dist_From_Midpoint, minimum)
-            if (Test_Min == 0.0 or minimum == 0.0):
-                print("Fuck in pruner")
             if (Test_Min < minimum):
                 minimum = Test_Min
             j += 1
@@ -87,8 +84,6 @@ def buildArray(PointArray, PointPairs):
 
 
 def BruteForce(PointArray):
-    #print("Inside BruteForce")
-    # print(PointArray)
     minimum = getDistance(PointArray[1][0], PointArray[0][
                           0], PointArray[1][1], PointArray[0][1])
     i = 0
@@ -101,9 +96,11 @@ def BruteForce(PointArray):
                                       PointArray[j][0], PointArray[j][1])
             j += 1
         i += 1
-    if (minimum == 0.0):
-        print("Fuck in BruteForce")
     return minimum
 
+
+"""
+ STILL NEED TO WRITE TIES TO FILE
+"""
 
 main()
