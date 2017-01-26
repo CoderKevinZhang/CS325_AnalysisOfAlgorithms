@@ -4,8 +4,8 @@ import sys
 
 output_Holder = []
 for i in range(int(sys.argv[1])):  # run until CLI arg
-    x_Value = random.randrange(0, 100)
-    y_Value = random.randrange(0, 100)
+    x_Value = random.randrange(0, 1000)
+    y_Value = random.randrange(0, 1000)
     output_Holder.append([x_Value, y_Value])
 
 x = 0

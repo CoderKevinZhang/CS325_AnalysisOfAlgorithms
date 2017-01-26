@@ -61,7 +61,7 @@ def BruteForce(PointArray):
 
     print(minimum)
     timelog = open("timelog_bruteforce.txt", "a")
-    current_Time = start_Time - time.time()
+    current_Time = abs(start_Time - time.time())
     timelog.write(str(current_Time))
     timelog.write("\n")
     timelog.close()

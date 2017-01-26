@@ -13,7 +13,7 @@ def main():
     buildArray(PointArray, PointPairs)
     Absolute_Smallest = getSmallestDistance(PointPairs, len(PointPairs))
     print(Absolute_Smallest)
-    End_Time = start_Time - time.time()
+    End_Time = abs(start_Time - time.time())
     timeLog = open("timeLog.NaiveDnC.txt", "a")
     timeLog.write(str(End_Time))
     timeLog.write("\n")
