@@ -2,7 +2,6 @@ from statistics import *
 from math import sqrt
 import sys
 import time
-
 start_Time = time.time()
 
 
@@ -11,10 +10,20 @@ def main():
     buildArray(PointArray, PointPairs)
     Absolute_Smallest = getSmallestDistance(
         PointPairs, len(PointPairs), minPoints)
+    minPoints.pop(0)
+    minPoints.insert(0, Absolute_Smallest)
     PaperWork(minPoints)
 
 
 def PaperWork(minPoints):
+    print("In PW", minPoints[0])
+    i = 1
+    while i + 1 <= len(minPoints):
+        if (getDistance(minPoints[i][0][0], minPoints[i][0][1], minPoints[i][1][0], minPoints[i][1][1]) != minPoints[0]):
+            del minPoints[i]
+            i -= 1
+        i += 1
+
     End_Time = abs(start_Time - time.time())
     timeLog = open("timeLog.NaiveDnC.txt", "a")
     timeLog.write(str(End_Time))
@@ -59,21 +68,24 @@ def getDistance(Point_x1, Point_y1, Point_x2, Point_y2):
 
 def pruneWithMiddle(ShortPoints, minimum, minPoints):
     ShortPoints.sort(key=lambda x: x[1])  # Sort by the y Coordinate
+    # Holy shit, values were getting passed by reference and messing with the
+    # current minimum
+
     for i in range(len(ShortPoints) - 1):
         j = i + 1
         first_Test = ShortPoints[j][1]
         Second_Test = ShortPoints[i][1]
         Y_Value_Dist = first_Test - Second_Test
-        while(Y_Value_Dist <= minimum and (j <= len(ShortPoints) - 1)):
+        while(Y_Value_Dist <= minimum and (j < len(ShortPoints))):
             dist_From_Midpoint = getDistance(ShortPoints[j][0], ShortPoints[j][
                 1], ShortPoints[i][0], ShortPoints[i][1])
-            Test_Min = min(dist_From_Midpoint, minimum)
-            if (dist_From_Midpoint == minimum):
-                minPoints.append([ShortPoints[j], ShortPoints[i]])
-            if (Test_Min < minimum):
+
+            if dist_From_Midpoint < minimum:
                 del minPoints[:]
-                minimum = Test_Min
-                minPoints.append(minimum)
+                minPoints.append(dist_From_Midpoint)
+                minimum = dist_From_Midpoint
+            if (dist_From_Midpoint == minimum):
+                minPoints.append([ShortPoints[i], ShortPoints[j]])
 
             j += 1
 
@@ -81,7 +93,7 @@ def pruneWithMiddle(ShortPoints, minimum, minPoints):
 
 
 def buildArray(PointArray, PointPairs):
-    openFile = open("example.input", "r+")
+    openFile = open(sys.argv[1], "r+")
     value = openFile.read().split()
 
     for i in value:
@@ -106,6 +118,9 @@ def BruteForce(PointArray, minPoints):
                                PointArray[j][0], PointArray[j][1])
             if (dist < minimum):
                 minimum = dist
+                del minPoints[:]
+                minPoints.append(dist)
+
             j += 1
         i += 1
     return minimum

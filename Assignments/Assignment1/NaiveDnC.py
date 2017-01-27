@@ -2,7 +2,7 @@ from statistics import *
 from math import sqrt
 import sys
 import time
-
+from copy import deepcopy
 start_Time = time.time()
 
 
@@ -12,6 +12,7 @@ def main():
     Absolute_Smallest = getSmallestDistance(
         PointPairs, len(PointPairs), minPoints)
     PaperWork(minPoints)
+    print(Absolute_Smallest)
 
 
 def PaperWork(minPoints):
@@ -59,29 +60,32 @@ def getDistance(Point_x1, Point_y1, Point_x2, Point_y2):
 
 def pruneWithMiddle(ShortPoints, minimum, minPoints):
     ShortPoints.sort(key=lambda x: x[1])  # Sort by the y Coordinate
+    # Holy shit, values were getting passed by reference and messing with the
+    # current minimum
+    Current_Min = deepcopy(minimum)
     for i in range(len(ShortPoints) - 1):
         j = i + 1
         first_Test = ShortPoints[j][1]
         Second_Test = ShortPoints[i][1]
         Y_Value_Dist = first_Test - Second_Test
-        while(Y_Value_Dist <= minimum and (j <= len(ShortPoints) - 1)):
+        while(Y_Value_Dist <= minimum and (j < len(ShortPoints))):
             dist_From_Midpoint = getDistance(ShortPoints[j][0], ShortPoints[j][
                 1], ShortPoints[i][0], ShortPoints[i][1])
-            Test_Min = min(dist_From_Midpoint, minimum)
-            if (dist_From_Midpoint == minimum):
-                minPoints.append([ShortPoints[j], ShortPoints[i]])
-            if (Test_Min < minimum):
+
+            if dist_From_Midpoint < Current_Min:
                 del minPoints[:]
-                minimum = Test_Min
-                minPoints.append(minimum)
+                minPoints.append(dist_From_Midpoint)
+                Current_Min = dist_From_Midpoint
+
+            if (dist_From_Midpoint == Current_Min):
+                minPoints.append([ShortPoints[i], ShortPoints[j]])
 
             j += 1
-
     return minimum
 
 
 def buildArray(PointArray, PointPairs):
-    openFile = open("example.input", "r+")
+    openFile = open(sys.argv[1], "r+")
     value = openFile.read().split()
 
     for i in value:
@@ -106,6 +110,11 @@ def BruteForce(PointArray, minPoints):
                                PointArray[j][0], PointArray[j][1])
             if (dist < minimum):
                 minimum = dist
+                del minPoints[:]
+                minPoints.append(dist)
+            if (dist == minimum):
+                minPoints.append([PointArray[j], PointArray[i]])
+
             j += 1
         i += 1
     return minimum
