@@ -2,7 +2,6 @@ from statistics import *
 from math import sqrt
 import sys
 import time
-from copy import deepcopy
 start_Time = time.time()
 
 
@@ -11,11 +10,20 @@ def main():
     buildArray(PointArray, PointPairs)
     Absolute_Smallest = getSmallestDistance(
         PointPairs, len(PointPairs), minPoints)
+    minPoints.pop(0)
+    minPoints.insert(0, Absolute_Smallest)
     PaperWork(minPoints)
-    print(Absolute_Smallest)
 
 
 def PaperWork(minPoints):
+    print("In PW", minPoints[0])
+    i = 1
+    while i + 1 <= len(minPoints):
+        if (getDistance(minPoints[i][0][0], minPoints[i][0][1], minPoints[i][1][0], minPoints[i][1][1]) != minPoints[0]):
+            del minPoints[i]
+            i -= 1
+        i += 1
+
     End_Time = abs(start_Time - time.time())
     timeLog = open("timeLog.NaiveDnC.txt", "a")
     timeLog.write(str(End_Time))
@@ -62,7 +70,7 @@ def pruneWithMiddle(ShortPoints, minimum, minPoints):
     ShortPoints.sort(key=lambda x: x[1])  # Sort by the y Coordinate
     # Holy shit, values were getting passed by reference and messing with the
     # current minimum
-    Current_Min = deepcopy(minimum)
+
     for i in range(len(ShortPoints) - 1):
         j = i + 1
         first_Test = ShortPoints[j][1]
@@ -72,15 +80,15 @@ def pruneWithMiddle(ShortPoints, minimum, minPoints):
             dist_From_Midpoint = getDistance(ShortPoints[j][0], ShortPoints[j][
                 1], ShortPoints[i][0], ShortPoints[i][1])
 
-            if dist_From_Midpoint < Current_Min:
+            if dist_From_Midpoint < minimum:
                 del minPoints[:]
                 minPoints.append(dist_From_Midpoint)
-                Current_Min = dist_From_Midpoint
-
-            if (dist_From_Midpoint == Current_Min):
+                minimum = dist_From_Midpoint
+            if (dist_From_Midpoint == minimum):
                 minPoints.append([ShortPoints[i], ShortPoints[j]])
 
             j += 1
+
     return minimum
 
 
@@ -112,8 +120,6 @@ def BruteForce(PointArray, minPoints):
                 minimum = dist
                 del minPoints[:]
                 minPoints.append(dist)
-            if (dist == minimum):
-                minPoints.append([PointArray[j], PointArray[i]])
 
             j += 1
         i += 1
