@@ -7,69 +7,81 @@ start_Time = time.time()
 
 
 def main():
-    PointArray = []
-    PointPairs = []
-
+    PointArray, PointPairs, minPoints = ([] for i in range(3))
     buildArray(PointArray, PointPairs)
-    Absolute_Smallest = getSmallestDistance(PointPairs, len(PointPairs))
-    print(Absolute_Smallest)
+    Absolute_Smallest = getSmallestDistance(
+        PointPairs, len(PointPairs), minPoints)
+    PaperWork(minPoints)
+
+
+def PaperWork(minPoints):
     End_Time = abs(start_Time - time.time())
     timeLog = open("timeLog.NaiveDnC.txt", "a")
     timeLog.write(str(End_Time))
     timeLog.write("\n")
     timeLog.close()
+    TieLog = open("Output.NaiveDnC.txt", "a")
+    for i in minPoints:
+        TieLog.write(str(i) + "\n")
+    TieLog.write("\n")
+    TieLog.close()
 
 
-def getSmallestDistance(PointPairs, nElements):
+def getSmallestDistance(PointPairs, nElements, minPoints):
 
     if (nElements <= 3):
-        return BruteForce(PointPairs)
+        return BruteForce(PointPairs, minPoints)
 
     midPoint = int(nElements / 2)
     middleValue = PointPairs[midPoint]
 
     LeftSmallestDist = getSmallestDistance(
-        PointPairs[:midPoint], midPoint)  # Break into left half
+        PointPairs[:midPoint], midPoint, minPoints)  # Break into left half
     RightSmalestDist = getSmallestDistance(
-        PointPairs[midPoint:], nElements - midPoint)  # Break into right half
+        PointPairs[midPoint:], nElements - midPoint, minPoints)  # Break into right half
 
-    shortest_Dist_In_Half = min(LeftSmallestDist, RightSmalestDist)
+    shortest_Dist_In_Halfs = min(LeftSmallestDist, RightSmalestDist)
 
     Points_Inside_Strip = []
 
     for i in PointPairs:
-        if (int(i[0] - middleValue[0]) < shortest_Dist_In_Half):
-            # if the x values are smaller than shortest distances in each
-            # respective half
+        if (int(i[0] - middleValue[0]) < shortest_Dist_In_Halfs):
+            # if the x values differences are smaller than shortest distances in each
+            # respective section
             Points_Inside_Strip.append(i)
 
-    return (pruneWithMiddle(Points_Inside_Strip, shortest_Dist_In_Half))
+    return (pruneWithMiddle(Points_Inside_Strip, shortest_Dist_In_Halfs, minPoints))
 
 
 def getDistance(Point_x1, Point_y1, Point_x2, Point_y2):
     return sqrt(((Point_x2 - Point_x1) ** 2) + ((Point_y2 - Point_y1) ** 2))
 
 
-def pruneWithMiddle(ShortPoints, minimum):
+def pruneWithMiddle(ShortPoints, minimum, minPoints):
     ShortPoints.sort(key=lambda x: x[1])  # Sort by the y Coordinate
     for i in range(len(ShortPoints) - 1):
         j = i + 1
         first_Test = ShortPoints[j][1]
         Second_Test = ShortPoints[i][1]
         Y_Value_Dist = first_Test - Second_Test
-        while((Y_Value_Dist) <= minimum and (j <= len(ShortPoints) - 1)):
+        while(Y_Value_Dist <= minimum and (j <= len(ShortPoints) - 1)):
             dist_From_Midpoint = getDistance(ShortPoints[j][0], ShortPoints[j][
                 1], ShortPoints[i][0], ShortPoints[i][1])
             Test_Min = min(dist_From_Midpoint, minimum)
+            if (dist_From_Midpoint == minimum):
+                minPoints.append([ShortPoints[j], ShortPoints[i]])
             if (Test_Min < minimum):
+                del minPoints[:]
                 minimum = Test_Min
+                minPoints.append(minimum)
+
             j += 1
 
     return minimum
 
 
 def buildArray(PointArray, PointPairs):
-    openFile = open(sys.argv[1], "r+")
+    openFile = open("example.input", "r+")
     value = openFile.read().split()
 
     for i in value:
@@ -83,24 +95,20 @@ def buildArray(PointArray, PointPairs):
     PointPairs.sort(key=lambda x: x[0])
 
 
-def BruteForce(PointArray):
+def BruteForce(PointArray, minPoints):
     minimum = getDistance(PointArray[1][0], PointArray[0][
                           0], PointArray[1][1], PointArray[0][1])
     i = 0
     while(i + 2 <= len(PointArray)):
         j = i + 1
         while (j + 1 <= len(PointArray)):
-            if ((getDistance(PointArray[i][0], PointArray[i][1],
-                             PointArray[j][0], PointArray[j][1])) < minimum):
-                minimum = getDistance(PointArray[i][0], PointArray[i][1],
-                                      PointArray[j][0], PointArray[j][1])
+            dist = getDistance(PointArray[i][0], PointArray[i][1],
+                               PointArray[j][0], PointArray[j][1])
+            if (dist < minimum):
+                minimum = dist
             j += 1
         i += 1
     return minimum
 
-
-"""
- STILL NEED TO WRITE TIES TO FILE
-"""
 
 main()
