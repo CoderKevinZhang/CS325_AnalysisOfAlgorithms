@@ -8,7 +8,7 @@ start_Time = time.time()
 
 
 def main():
-    PointArray, PointPairs, PointPairsY, minPoints = ([] for i in range(3))
+    PointArray, PointPairs, PointPairsY, minPoints = ([] for i in range(4))
     buildArray(PointArray, PointPairs, PointPairsY)
     Absolute_Smallest = getSmallestDistance(
         PointPairs, PointPairsY, len(PointPairs), minPoints)
@@ -17,11 +17,11 @@ def main():
 
 def PaperWork(minPoints):
     End_Time = abs(start_Time - time.time())
-    timeLog = open("timeLog.NaiveDnC.txt", "a")
+    timeLog = open("timeLog.EnhancedDnC.txt", "a")
     timeLog.write(str(End_Time))
     timeLog.write("\n")
     timeLog.close()
-    TieLog = open("Output.NaiveDnC.txt", "a")
+    TieLog = open("Output.EnhancedDnC.txt", "a")
     for i in minPoints:
         TieLog.write(str(i) + "\n")
     TieLog.write("\n")
@@ -37,7 +37,7 @@ def getSmallestDistance(PointPairs, PointPairsY, nElements, minPoints):
     middleValue = PointPairs[midPoint]
     
     #split points in the y array along the vertical line
-    Py1, Pyr
+    Py1, Pyr = ([] for i in range(2))
     for i in PointPairs:
         if (PointPairsY[i][0] <= middleValue[0]):
             Pyl.append(PointPairsY[i])
