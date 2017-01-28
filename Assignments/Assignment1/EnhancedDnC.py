@@ -11,7 +11,7 @@ def main():
     PointArray, PointPairs, PointPairsY, minPoints = ([] for i in range(3))
     buildArray(PointArray, PointPairs, PointPairsY)
     Absolute_Smallest = getSmallestDistance(
-        PointPairs, len(PointPairs), minPoints)
+        PointPairs, PointPairsY, len(PointPairs), minPoints)
     PaperWork(minPoints)
 
 
@@ -28,24 +28,32 @@ def PaperWork(minPoints):
     TieLog.close()
 
 
-def getSmallestDistance(PointPairs, nElements, minPoints):
+def getSmallestDistance(PointPairs, PointPairsY, nElements, minPoints):
 
     if (nElements <= 3):
         return BruteForce(PointPairs, minPoints)
 
     midPoint = int(nElements / 2)
     middleValue = PointPairs[midPoint]
+    
+    #split points in the y array along the vertical line
+    Py1, Pyr
+    for i in PointPairs:
+        if (PointPairsY[i][0] <= middleValue[0]):
+            Pyl.append(PointPairsY[i])
+        else:
+            Pyr.append(PointPairsY[i])
 
     LeftSmallestDist = getSmallestDistance(
-        PointPairs[:midPoint], midPoint, minPoints)  # Break into left half
+        PointPairs[:midPoint], Pyl, midPoint, minPoints)  # Break into left half
     RightSmalestDist = getSmallestDistance(
-        PointPairs[midPoint:], nElements - midPoint, minPoints)  # Break into right half
+        PointPairs[midPoint:], Pyr, nElements - midPoint, minPoints)  # Break into right half
 
     shortest_Dist_In_Halfs = min(LeftSmallestDist, RightSmalestDist)
 
     Points_Inside_Strip = []
 
-    for i in PointPairs:
+    for i in PointPairsY:
         if (int(i[0] - middleValue[0]) < shortest_Dist_In_Halfs):
             # if the x values differences are smaller than shortest distances in each
             # respective section
@@ -59,7 +67,7 @@ def getDistance(Point_x1, Point_y1, Point_x2, Point_y2):
 
 
 def pruneWithMiddle(ShortPoints, minimum, minPoints):
-    ShortPoints.sort(key=lambda x: x[1])  # Sort by the y Coordinate
+    # No longer needed: ShortPoints.sort(key=lambda x: x[1])  # Sort by the y Coordinate
     for i in range(len(ShortPoints) - 1):
         j = i + 1
         first_Test = ShortPoints[j][1]
