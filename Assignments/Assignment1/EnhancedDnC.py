@@ -39,10 +39,10 @@ def getSmallestDistance(PointPairs, PointPairsY, nElements, minPoints):
     #split points in the y array along the vertical line
     Py1, Pyr = ([] for i in range(2))
     for i in PointPairs:
-        if (PointPairsY[i][0] <= middleValue[0]):
-            Pyl.append(PointPairsY[i])
+        if (i[0] <= middleValue[0]):
+            Pyl.append(i)
         else:
-            Pyr.append(PointPairsY[i])
+            Pyr.append(i)
 
     LeftSmallestDist = getSmallestDistance(
         PointPairs[:midPoint], Pyl, midPoint, minPoints)  # Break into left half
