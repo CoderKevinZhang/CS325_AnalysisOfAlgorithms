@@ -8,8 +8,10 @@ start_Time = time.time()
 
 
 def main():
-    PointArray, PointPairs, PointPairsY, minPoints = ([] for i in range(4))
-    buildArray(PointArray, PointPairs, PointPairsY)
+    PointArray, PointPairs, minPoints = ([] for i in range(3))
+    buildArray(PointArray, PointPairs)
+    PointPairsY = copy.deepcopy(PointPairs)
+    PointPairsY.sort(key=lambda y: y[1])
     Absolute_Smallest = getSmallestDistance(
         PointPairs, PointPairsY, len(PointPairs), minPoints)
     PaperWork(minPoints)
@@ -89,7 +91,7 @@ def pruneWithMiddle(ShortPoints, minimum, minPoints):
     return minimum
 
 
-def buildArray(PointArray, PointPairs, PointPairsY):
+def buildArray(PointArray, PointPairs):
     openFile = open("example.input", "r+")
     value = openFile.read().split()
 
@@ -104,10 +106,8 @@ def buildArray(PointArray, PointPairs, PointPairsY):
     PointPairs.sort(key=lambda x: x[0])
     
     # Make a copy of the array
-    for i in PointPairs:
-        PointPairsY.append(i)
     # Sorts array of pairs by the second value
-    PointPairsY.sort(key=lambda y: y[1])
+    #PointPairsY.sort(key=lambda y: y[1])
 
 def BruteForce(PointArray, minPoints):
     minimum = getDistance(PointArray[1][0], PointArray[0][
