@@ -38,7 +38,7 @@ def getSmallestDistance(PointPairs, PointPairsY, nElements, minPoints):
     
     #split points in the y array along the vertical line
     Py1, Pyr = ([] for i in range(2))
-    for i in PointPairs:
+    for i in PointPairsY:
         if (i[0] <= middleValue[0]):
             Pyl.append(i)
         else:
@@ -104,7 +104,8 @@ def buildArray(PointArray, PointPairs, PointPairsY):
     PointPairs.sort(key=lambda x: x[0])
     
     # Make a copy of the array
-    PointPairsY = list(PointPairs)
+    for i in PointPairs:
+        PointPairsY.append(i)
     # Sorts array of pairs by the second value
     PointPairsY.sort(key=lambda y: y[1])
 
