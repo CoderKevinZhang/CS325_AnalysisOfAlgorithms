@@ -10,26 +10,27 @@ def main():
     buildArray(PointArray, PointPairs)
     Absolute_Smallest = getSmallestDistance(
         PointPairs, len(PointPairs), minPoints)
-    minPoints.pop(0)
-    minPoints.insert(0, Absolute_Smallest)
-    PaperWork(minPoints)
+    PaperWork(minPoints, Absolute_Smallest)
 
 
-def PaperWork(minPoints):
-    print("In PW", minPoints[0])
-    i = 1
-    while i + 1 <= len(minPoints):
-        if (getDistance(minPoints[i][0][0], minPoints[i][0][1], minPoints[i][1][0], minPoints[i][1][1]) != minPoints[0]):
-            del minPoints[i]
-            i -= 1
-        i += 1
-
+def PaperWork(minPoints, Absolute_Smallest):
     End_Time = abs(start_Time - time.time())
+    minPoints.sort()
+    i = 0
+    # This only runs with example.input, strange little bug
+    for i in range(len(minPoints)):
+        j = i + 1
+        while j <= len(minPoints) - 1:
+            if minPoints[i] == minPoints[j]:
+                del minPoints[i]
+                j -= 1
+            j += 1
     timeLog = open("timeLog.NaiveDnC.txt", "a")
     timeLog.write(str(End_Time))
     timeLog.write("\n")
     timeLog.close()
     TieLog = open("Output.NaiveDnC.txt", "a")
+    TieLog.write(str(Absolute_Smallest) + "\n")
     for i in minPoints:
         TieLog.write(str(i) + "\n")
     TieLog.write("\n")
@@ -37,7 +38,6 @@ def PaperWork(minPoints):
 
 
 def getSmallestDistance(PointPairs, nElements, minPoints):
-
     if (nElements <= 3):
         return BruteForce(PointPairs, minPoints)
 
@@ -59,7 +59,7 @@ def getSmallestDistance(PointPairs, nElements, minPoints):
             # respective section
             Points_Inside_Strip.append(i)
 
-    return (pruneWithMiddle(Points_Inside_Strip, shortest_Dist_In_Halfs, minPoints))
+    return (min(shortest_Dist_In_Halfs, pruneWithMiddle(Points_Inside_Strip, shortest_Dist_In_Halfs, minPoints)))
 
 
 def getDistance(Point_x1, Point_y1, Point_x2, Point_y2):
@@ -68,27 +68,28 @@ def getDistance(Point_x1, Point_y1, Point_x2, Point_y2):
 
 def pruneWithMiddle(ShortPoints, minimum, minPoints):
     ShortPoints.sort(key=lambda x: x[1])  # Sort by the y Coordinate
-    # Holy shit, values were getting passed by reference and messing with the
-    # current minimum
-
     for i in range(len(ShortPoints) - 1):
         j = i + 1
         first_Test = ShortPoints[j][1]
         Second_Test = ShortPoints[i][1]
         Y_Value_Dist = first_Test - Second_Test
         while(Y_Value_Dist <= minimum and (j < len(ShortPoints))):
-            dist_From_Midpoint = getDistance(ShortPoints[j][0], ShortPoints[j][
-                1], ShortPoints[i][0], ShortPoints[i][1])
+            dist_From_Midpoint = getDistance(ShortPoints[i][0], ShortPoints[i][
+                1], ShortPoints[j][0], ShortPoints[j][1])
+            Smaller_Dist = min(dist_From_Midpoint, minimum)
 
-            if dist_From_Midpoint < minimum:
+            # Check to see if the point is smaller than the distance of the
+            # current points
+            if (Smaller_Dist < getDistance(minPoints[0][0][0], minPoints[0][0][1], minPoints[0][1][0], minPoints[0][1][1])):
                 del minPoints[:]
-                minPoints.append(dist_From_Midpoint)
-                minimum = dist_From_Midpoint
-            if (dist_From_Midpoint == minimum):
+                minimum = Smaller_Dist
+                minPoints.append([ShortPoints[i], ShortPoints[j]])
+            # Check to see if the point is equal to the distance of current
+            # points
+            elif (dist_From_Midpoint == getDistance(minPoints[0][0][0], minPoints[0][0][1], minPoints[0][1][0], minPoints[0][1][1])):
                 minPoints.append([ShortPoints[i], ShortPoints[j]])
 
             j += 1
-
     return minimum
 
 
@@ -109,7 +110,7 @@ def buildArray(PointArray, PointPairs):
 
 def BruteForce(PointArray, minPoints):
     minimum = getDistance(PointArray[1][0], PointArray[0][
-                          0], PointArray[1][1], PointArray[0][1])
+        0], PointArray[1][1], PointArray[0][1])
     i = 0
     while(i + 2 <= len(PointArray)):
         j = i + 1
@@ -119,7 +120,7 @@ def BruteForce(PointArray, minPoints):
             if (dist < minimum):
                 minimum = dist
                 del minPoints[:]
-                minPoints.append(dist)
+                minPoints.append([PointArray[i], PointArray[j]])
 
             j += 1
         i += 1
