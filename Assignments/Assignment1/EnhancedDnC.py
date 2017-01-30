@@ -108,7 +108,7 @@ def pruneWithMiddle(ShortPoints, minimum, minPoints):
 
 
 def buildArray(PointArray, PointPairs):
-    openFile = open("example.input", "r+")
+    openFile = open(sys.argv[1], "r+")
     value = openFile.read().split()
 
     for i in value:
